@@ -41,6 +41,39 @@ const element = (
 const element1 = <div tabIndex="0"></div>; //你可以使用引号来定义以字符串为值的属性：
 const element2 = <img src={user.avatarUrl}></img>; //也可以使用大括号来定义以 JavaScript 表达式为值的属性：
 
+//你还可以使用 JSX 中的点表示法来引用 React 组件。你可以方便地从一个模块中导出许多 React 组件。例如，有一个名为 MyComponents.DatePicker 的组件，你可以直接在 JSX 中使用它：
+const MyComponents = {
+    DatePicker: function DatePicker(props) {
+        return <div>Imagine a {props.color} datepicker here.</div>;
+    }
+}
+
+function BlueDatePicker() {
+    return <MyComponents.DatePicker color="blue" />;
+}
+
+/*
+这里也挺厉害的，运行时选择类型
+const components = {
+    photo: PhotoStory,
+    video: VideoStory
+};
+
+function Story(props) {
+    // 错误！JSX 标签名不能为一个表达式。
+    return <components[props.storyType] story = { props.story } />;
+}
+*/
+function App1() {
+    return <Greeting firstName="Ben" lastName="Hector" />;
+}
+
+function App2() {
+    const props = { firstName: 'Ben', lastName: 'Hector' };
+    return <Greeting {...props} />;//如果你已经有了个 props 对象，并且想在 JSX 中传递它，你可以使用 ...作为扩展操作符来传递整个属性对象。上面两个组件是等价的
+}
+
+
 
 //定义一个组件最简单的方式是使用JavaScript函数：该函数是一个有效的React组件，它接收一个单一的“props”对象并返回了一个React元素。我们之所以称这种类型的组件为函数定义组
 function Welcome(props) {
@@ -204,6 +237,15 @@ class ClockComp extends React.Component {
 //    document.getElementById('root')
 //);
 
+
+
+
+
+
+
+
+
+
 //下面来看下事件
 function ActionLink() {
     function handleClick(e) {
@@ -307,6 +349,16 @@ class Popper extends React.Component{
     }
 }
 
+
+
+
+
+
+
+
+
+
+
 //下面来看一下条件渲染
 function UserGreeting(props) {
     return <h1>Welcome back!</h1>;
@@ -389,9 +441,6 @@ function Mailbox(props) {
 }
 
 const messages = ['React', 'Re: React', 'Re:Re: React'];
-
-
-
 //在下面的例子中，<WarningBanner /> 根据属性 warn 的值条件渲染。如果 warn 的值是 false，则组件不会渲染：
 function WarningBanner(props) {
     if (!props.warn) {
@@ -450,6 +499,7 @@ function NumberList(props) {
         <ul>{listItems}</ul>
     );
 }
+
 
 
 
@@ -558,6 +608,10 @@ function Blog(props) {
         </div>
     );
 }
+
+
+
+
 
 
 
@@ -939,6 +993,68 @@ class CalculatorNew extends React.Component {
         );
     }
 }
+
+
+
+
+
+
+
+
+
+//ref
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    // 创建 ref 存储 textInput DOM 元素
+    this.textInput = React.createRef();//当 ref 属性被用于一个自定义类组件时，ref 对象将接收该组件已挂载的实例作为它的 current 。
+    this.focusTextInput = this.focusTextInput.bind(this);
+  }
+
+  focusTextInput() {
+    // 直接使用原生 API 使 text 输入框获得焦点
+    // 注意：通过 "current" 取得 DOM 节点
+    this.textInput.current.focus();//直接调用子组件（元素）的方法
+  }
+
+  render() {
+    // 告诉 React 我们想把 <input> ref 关联到构造器里创建的 `textInput` 上
+    return (
+      <div>
+        <input
+          type="text"
+          ref={this.textInput} />
+          
+        <input
+          type="button"
+          value="Focus the text input"
+          onClick={this.focusTextInput}
+        />
+      </div>
+    );
+  }
+}
+
+//如果我们想要包装上面的 CustomTextInput ，来模拟挂载之后立即被点击的话，我们可以使用 ref 来访问自定义输入，并手动调用它的 focusTexInput 方法：父组件调用子组件通过ref
+class AutoFocusTextInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.textInput = React.createRef();
+    }
+
+    componentDidMount() {
+        this.textInput.current.focusTextInput();//这里相当于直接调用子组件的方法
+    }
+
+    render() {
+        return (
+            <CustomTextInput ref={this.textInput} />
+        );
+    }
+}
+
+
+
 
 
 
