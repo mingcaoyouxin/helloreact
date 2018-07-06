@@ -1,0 +1,27 @@
+{
+  	"plugins": [
+        "transform-runtime",
+		"transform-decorators-legacy",
+		"transform-class-properties",
+		"transform-array-from"
+  	],
+    "presets": [
+        ["es2015", {"loose": true, "modules": false}],
+		["react"],
+    	["stage-3"]
+    ],
+    "env": {
+    	"development": {
+    		"plugins": [
+    			"react-hot-loader/babel"
+    		]
+		},
+		"test": {
+			"presets": [
+				["es2015", {"loose": true}],
+				["react"],
+				["stage-3"]
+			]
+		}
+    }
+}
